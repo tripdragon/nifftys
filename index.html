@@ -60,7 +60,7 @@
         <div id="rootlike" class="">
 
 
-              <div id="loggerfloggermcdoggy"></div>
+              <!-- <div id="loggerfloggermcdoggy"></div> -->
 
 
           <div id="overlay">
@@ -107,56 +107,57 @@
 
 
         <script type="text/javascript">
-
-            (function async () {
-                const logger = document.getElementById('loggerfloggermcdoggy');
-
-
-
-                // const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-                // // Adding a delay of, for example, 1000 milliseconds (1 second)
-                // await delay(1000);
-                // logger.remove()
-                //
-                // return;
-
-                const stringlimit = 100;
-                const styles = {
-                    log: 'white',
-                    warn: 'yellow',
-                    error: 'red',
-                    info: 'blue',
-                    debug: 'lightgreen'
-                };
-
-                function truncateMessage(message) {
-                    if (typeof message === 'string' && message.length > stringlimit) {
-                        return message.substring(0, stringlimit) + '...';
-                    }
-                    return message;
-                }
-
-                function appendLog(type, message) {
-                    const newLog = document.createElement('div');
-                    newLog.style.color = styles[type] || 'white';  // Default to white if type not found
-                    const formattedMessage = (typeof message === 'object') ?
-                        (JSON && JSON.stringify ? JSON.stringify(message, null, 2) : message) :
-                        message;
-                    newLog.textContent = truncateMessage(formattedMessage);
-                    logger.appendChild(newLog);
-                    logger.scrollTop = logger.scrollHeight;  // Scroll to the bottom
-                }
-
-                function interceptConsoleMethod(type) {
-                    const originalMethod = console[type];
-                    console[type] = function (...args) {
-                        originalMethod.apply(console, args);  // Keep default console behavior
-                        args.forEach(arg => appendLog(type, arg));  // Log each argument
-                    };
-                }
-
-                ['log', 'warn', 'error', 'info', 'debug'].forEach(interceptConsoleMethod);
-            })();
+            //
+            // (function async () {
+            //     const logger = document.getElementById('loggerfloggermcdoggy');
+            //
+            //
+            //
+            //     // const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+            //     // // Adding a delay of, for example, 1000 milliseconds (1 second)
+            //     // await delay(1000);
+            //     // logger.remove()
+            //     //
+            //     // return;
+            //
+            //     const stringlimit = 100;
+            //     const styles = {
+            //         log: 'white',
+            //         warn: 'yellow',
+            //         error: 'red',
+            //         info: 'blue',
+            //         debug: 'lightgreen'
+            //     };
+            //
+            //     function truncateMessage(message) {
+            //         if (typeof message === 'string' && message.length > stringlimit) {
+            //             return message.substring(0, stringlimit) + '...';
+            //         }
+            //         return message;
+            //     }
+            //
+            //     function appendLog(type, message) {
+            //         const newLog = document.createElement('div');
+            //         newLog.style.color = styles[type] || 'white';  // Default to white if type not found
+            //         const formattedMessage = (typeof message === 'object') ?
+            //             (JSON && JSON.stringify ? JSON.stringify(message, null, 2) : message) :
+            //             message;
+            //         newLog.textContent = truncateMessage(formattedMessage);
+            //         logger.appendChild(newLog);
+            //         logger.scrollTop = logger.scrollHeight;  // Scroll to the bottom
+            //     }
+            //
+            //     function interceptConsoleMethod(type) {
+            //         const originalMethod = console[type];
+            //         console[type] = function (...args) {
+            //             originalMethod.apply(console, args);  // Keep default console behavior
+            //             args.forEach(arg => appendLog(type, arg));  // Log each argument
+            //         };
+            //     }
+            //
+            //     ['log', 'warn', 'error', 'info', 'debug'].forEach(interceptConsoleMethod);
+            // })();
+            //
         </script>
 
     <!--  the "app", does nothing, it should allow folder scripts to not have to call with ../ -->
