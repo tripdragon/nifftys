@@ -1,167 +1,32 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nifftys!</title>
-    <style>
-      body { margin: 0; }
-      canvas { display: block; }
-    </style>
-    <script src="https://launchar.app/sdk/v1?key=jRhpJS4XjxGGES1muiAIJYd7gbsf4zBx&redirect=true"></script>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Three.js with Vite</title>
+  <!-- 		<script src="https://launchar.app/sdk/v1?key=jRhpJS4XjxGGES1muiAIJYd7gbsf4zBx&redirect=true"></script>
+ -->
 
+  <style media="screen">
 
+    #loggerfloggermcdoggy{
+      position: fixed;
+      top: 0px;
+      left: 0px;
+      color: white;
+      background: rgba(0,0,0,0.4);
+      padding: 0.5em;
+      height: 400px;
+      width: 340px;
+      overflow: scroll;
+      z-index: 191394802345;
+    }
 
-        <script type="application/javascript" src="//cdn.rawgit.com/Alorel/console-log-html/master/console-log-html.min.js"></script>
-
-        <style media="screen">
-        #loggerfloggermcdoggy{
-          position: fixed;
-          top: 0px;
-          left: 0px;
-          color: white;
-          background: rgba(0,0,0,0.4);
-          padding: 0.5em;
-          height: 400px;
-          width: 340px;
-          overflow: scroll;
-          z-index: 191394802345;
-
-
-          }
-        </style>
-
-
-		<script type="importmap">
-      {
-				"imports": {
-					"three": "./three/build/three.module.js",
-					"three/addons/": "./three/jsm/",
-          "app": "./app.js"
-				}
-			}
-		</script>
-    <script type="module" crossorigin src="/nifftys/assets/index-D9chuugE.js"></script>
-    <link rel="stylesheet" crossorigin href="/nifftys/assets/index-CLlf2Ufu.css">
-  </head>
-  <body>
-    <!-- <div id="app"></div> -->
-
-
-        <div id="start-screen">
-          <div id="start-logo"></div>
-
-          <button id="launch-button" class="hide">Launch ARrrr!</button>
-          <div id="loadingstate" class="show">Loading...</div>
-        </div>
-        <!-- #start-screen -->
-
-        <div id="rootlike" class="">
-
-
-              <!-- <div id="loggerfloggermcdoggy"></div> -->
-
-
-          <div id="overlay">
-            <div id="tracking-prompt"><img style="width:40px;" src="/nifftys/assets/tea-BCWflsBz.png" /></div>
-            <!-- <div id="instructions">Tap to fish</div> -->
-          </div>
-
-          <!-- this is hidden, its a qr code, we dont need it -->
-          <div id="app" class="hide" skdlfdfgstyle="display:none;">
-            <a href="https://launch.variant3d.com"><img id="variant-logo" alt="WebXR on iOS" src="favicon.ico"/></a>
-            <h2>Variant Launch ThreeJS Example</h2>
-            <div id="ar-not-supported">
-              <p>
-                WebXR Not Supported. Open this page on iOS or Android to view the
-                example.
-              </p>
-              <p>
-                For documentation & support, visit
-                <a href="https://launch.variant3d.com/docs">https://launch.variant3d.com</a>.
-              </p>
-              <img id="qr-code" />
-            </div>
-          </div>
-
-
-          <div id="notes">
-
-            <!-- <button id="addbuttonhorsey">gcgfcyh</button> -->
-            <!-- <button id="makeCubey">makeCubey</button> -->
-
-            <h1 style="color:#fff;">v7777</h1>
-
-        		<!-- <div id="info">
-        			<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> ar - hit test<br/>(Chrome Android 81+)
-        		</div> -->
-          </div>
-
-          <!-- <div id="debug-console'">
-
-          </div> -->
-
-        </div><!-- rootlike -->
-
-
-
-        <script type="text/javascript">
-            //
-            // (function async () {
-            //     const logger = document.getElementById('loggerfloggermcdoggy');
-            //
-            //
-            //
-            //     // const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-            //     // // Adding a delay of, for example, 1000 milliseconds (1 second)
-            //     // await delay(1000);
-            //     // logger.remove()
-            //     //
-            //     // return;
-            //
-            //     const stringlimit = 100;
-            //     const styles = {
-            //         log: 'white',
-            //         warn: 'yellow',
-            //         error: 'red',
-            //         info: 'blue',
-            //         debug: 'lightgreen'
-            //     };
-            //
-            //     function truncateMessage(message) {
-            //         if (typeof message === 'string' && message.length > stringlimit) {
-            //             return message.substring(0, stringlimit) + '...';
-            //         }
-            //         return message;
-            //     }
-            //
-            //     function appendLog(type, message) {
-            //         const newLog = document.createElement('div');
-            //         newLog.style.color = styles[type] || 'white';  // Default to white if type not found
-            //         const formattedMessage = (typeof message === 'object') ?
-            //             (JSON && JSON.stringify ? JSON.stringify(message, null, 2) : message) :
-            //             message;
-            //         newLog.textContent = truncateMessage(formattedMessage);
-            //         logger.appendChild(newLog);
-            //         logger.scrollTop = logger.scrollHeight;  // Scroll to the bottom
-            //     }
-            //
-            //     function interceptConsoleMethod(type) {
-            //         const originalMethod = console[type];
-            //         console[type] = function (...args) {
-            //             originalMethod.apply(console, args);  // Keep default console behavior
-            //             args.forEach(arg => appendLog(type, arg));  // Log each argument
-            //         };
-            //     }
-            //
-            //     ['log', 'warn', 'error', 'info', 'debug'].forEach(interceptConsoleMethod);
-            // })();
-            //
-        </script>
-
-    <!--  the "app", does nothing, it should allow folder scripts to not have to call with ../ -->
-
-
-  </body>
+  </style>
+  <script type="module" crossorigin src="/nifftys/assets/index-Blk-mSlb.js"></script>
+  <link rel="stylesheet" crossorigin href="/nifftys/assets/index-C-RdtdyM.css">
+</head>
+<body>
+  <div id="app"></div>
+</body>
 </html>
