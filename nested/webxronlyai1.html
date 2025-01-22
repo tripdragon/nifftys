@@ -2,86 +2,112 @@
 <html lang="en">
 <head>
   <title>WebXR Line Drawing</title>
-  <script src="https://launchar.app/sdk/v1?key=jRhpJS4XjxGGES1muiAIJYd7gbsf4zBx&redirect=true"></script>
-
   <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
     canvas {
       display: block;
       width: 100vw;
       height: 100vh;
     }
+    #startButton {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 10px 20px;
+      background-color: #007BFF;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 1;
+    }
+    #startButton:hover {
+      background-color: #0056b3;
+    }
   </style>
 </head>
 <body>
-<canvas id="xrCanvas"></canvas>
-<script>
-  let xrSession;
-  let gl;
-  let referenceSpace;
-  let xrReferenceSpace;
+  <button id="startButton">Start AR Session</button>
+  <canvas id="xrCanvas"></canvas>
 
-  const canvas = document.getElementById('xrCanvas');
+  <script>
+    let xrSession;
+    let gl;
+    let referenceSpace;
+    const canvas = document.getElementById('xrCanvas');
+    const startButton = document.getElementById('startButton');
 
-  // Check for WebXR support
-  if (navigator.xr) {
-    navigator.xr.requestSession('immersive-ar').then(startXR);
-  } else {
-    console.error('WebXR not supported');
-  }
+    // Check for WebXR support
+    if (!navigator.xr) {
+      console.error('WebXR not supported');
+      startButton.disabled = true;
+    }
 
-  async function startXR(session) {
-    xrSession = session;
+    // Event listener to start the WebXR session when the button is clicked
+    startButton.addEventListener('click', startXR);
 
-    const context = canvas.getContext('webgl', { xrCompatible: true });
-    gl = context;
+    async function startXR() {
+      // Disable the start button once the session starts
+      startButton.disabled = true;
+      startButton.style.display = 'none'; // Hide the button
 
-    await gl.makeXRCompatible();
-    xrSession.updateRenderState({ baseLayer: new XRWebGLLayer(xrSession, gl) });
+      const session = await navigator.xr.requestSession('immersive-ar');
+      xrSession = session;
 
-    referenceSpace = await xrSession.requestReferenceSpace('local-floor');
-    xrSession.addEventListener('select', onSelect);
-    xrSession.requestAnimationFrame(onXRFrame);
-  }
+      const context = canvas.getContext('webgl', { xrCompatible: true });
+      gl = context;
 
-  function drawLine(x, y, z) {
-    // Basic line drawing logic in WebGL
-    const length = 1.0; // Length of the line
-    const endPoint = {
-      x: x + length * Math.sin(y),
-      y: y,
-      z: z + length * Math.cos(y)
-    };
+      await gl.makeXRCompatible();
+      xrSession.updateRenderState({ baseLayer: new XRWebGLLayer(xrSession, gl) });
 
-    gl.clearColor(0, 0, 0, 0);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      referenceSpace = await xrSession.requestReferenceSpace('local-floor');
+      xrSession.addEventListener('select', onSelect);
+      xrSession.requestAnimationFrame(onXRFrame);
+    }
 
-    // Placeholder for actual rendering logic using line shaders
-    console.log(`Line end point: (${endPoint.x.toFixed(2)}, ${endPoint.y.toFixed(2)}, ${endPoint.z.toFixed(2)})`);
-  }
+    function drawLine(x, y, z) {
+      // Basic line drawing logic in WebGL
+      const length = 1.0; // Length of the line
+      const endPoint = {
+        x: x + length * Math.sin(y),
+        y: y,
+        z: z + length * Math.cos(y)
+      };
 
-  function onXRFrame(time, frame) {
-    const session = frame.session;
-    const pose = frame.getViewerPose(referenceSpace);
-    if (pose) {
-      const position = pose.transform.position;
-      const orientation = pose.transform.orientation;
-
-      gl.bindFramebuffer(gl.FRAMEBUFFER, session.renderState.baseLayer.framebuffer);
+      gl.clearColor(0, 0, 0, 0);
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-      console.log(`Phone Position: x=${position.x}, y=${position.y}, z=${position.z}`);
-      console.log(`Orientation: x=${orientation.x}, y=${orientation.y}, z=${orientation.z}, w=${orientation.w}`);
+      console.log(`Line end point: (${endPoint.x.toFixed(2)}, ${endPoint.y.toFixed(2)}, ${endPoint.z.toFixed(2)})`);
     }
-    session.requestAnimationFrame(onXRFrame);
-  }
 
-  function onSelect(event) {
-    const pose = event.frame.getViewerPose(referenceSpace);
-    if (pose) {
-      const position = pose.transform.position;
-      drawLine(position.x, position.y, position.z);
+    function onXRFrame(time, frame) {
+      const session = frame.session;
+      const pose = frame.getViewerPose(referenceSpace);
+      if (pose) {
+        const position = pose.transform.position;
+        const orientation = pose.transform.orientation;
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, session.renderState.baseLayer.framebuffer);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        console.log(`Phone Position: x=${position.x}, y=${position.y}, z=${position.z}`);
+        console.log(`Orientation: x=${orientation.x}, y=${orientation.y}, z=${orientation.z}, w=${orientation.w}`);
+      }
+      session.requestAnimationFrame(onXRFrame);
     }
-  }
-</script>
+
+    function onSelect(event) {
+      const pose = event.frame.getViewerPose(referenceSpace);
+      if (pose) {
+        const position = pose.transform.position;
+        drawLine(position.x, position.y, position.z);
+      }
+    }
+  </script>
 </body>
 </html>
