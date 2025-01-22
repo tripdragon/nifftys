@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>WebXR Line Drawing</title>
+  <style>
+    canvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+<canvas id="xrCanvas"></canvas>
+<script>
+  let xrSession;
+  let gl;
+  let referenceSpace;
+  let xrReferenceSpace;
+
+  const canvas = document.getElementById('xrCanvas');
+
+  // Check for WebXR support
+  if (navigator.xr) {
+    navigator.xr.requestSession('immersive-ar').then(startXR);
+  } else {
+    console.error('WebXR not supported');
+  }
+
+  async function startXR(session) {
+    xrSession = session;
+
+    const context = canvas.getContext('webgl', { xrCompatible: true });
+    gl = context;
+
+    await gl.makeXRCompatible();
+    xrSession.updateRenderState({ baseLayer: new XRWebGLLayer(xrSession, gl) });
+
+    referenceSpace = await xrSession.requestReferenceSpace('local-floor');
+    xrSession.addEventListener('select', onSelect);
+    xrSession.requestAnimationFrame(onXRFrame);
+  }
+
+  function drawLine(x, y, z) {
+    // Basic line drawing logic in WebGL
+    const length = 1.0; // Length of the line
+    const endPoint = {
+      x: x + length * Math.sin(y),
+      y: y,
+      z: z + length * Math.cos(y)
+    };
+
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    // Placeholder for actual rendering logic using line shaders
+    console.log(`Line end point: (${endPoint.x.toFixed(2)}, ${endPoint.y.toFixed(2)}, ${endPoint.z.toFixed(2)})`);
+  }
+
+  function onXRFrame(time, frame) {
+    const session = frame.session;
+    const pose = frame.getViewerPose(referenceSpace);
+    if (pose) {
+      const position = pose.transform.position;
+      const orientation = pose.transform.orientation;
+
+      gl.bindFramebuffer(gl.FRAMEBUFFER, session.renderState.baseLayer.framebuffer);
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+      console.log(`Phone Position: x=${position.x}, y=${position.y}, z=${position.z}`);
+      console.log(`Orientation: x=${orientation.x}, y=${orientation.y}, z=${orientation.z}, w=${orientation.w}`);
+    }
+    session.requestAnimationFrame(onXRFrame);
+  }
+
+  function onSelect(event) {
+    const pose = event.frame.getViewerPose(referenceSpace);
+    if (pose) {
+      const position = pose.transform.position;
+      drawLine(position.x, position.y, position.z);
+    }
+  }
+</script>
+</body>
+</html>
